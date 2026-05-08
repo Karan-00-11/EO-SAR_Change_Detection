@@ -3,3 +3,4 @@ Data/
 venv/
 .github/*
 
+__pycache__
