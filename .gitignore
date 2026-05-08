@@ -2,5 +2,7 @@ Data/*
 Data/
 venv/
 .github/*
+configs/
+
 
 __pycache__
