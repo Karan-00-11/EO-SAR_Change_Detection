@@ -3,6 +3,6 @@ Data/
 venv/
 .github/*
 configs/
-
+train_metadata.npz
 
 __pycache__
