@@ -3,6 +3,7 @@ Data/
 venv/
 .github/*
 configs/
-train_metadata.npz
+model.ipynb
+
 
 __pycache__
