@@ -1,0 +1,64 @@
+project:
+  name: "EO-SAR Change-Detection"
+  run_name: "cmcdnet-run-001"
+
+data:
+  data_root: "Data"
+  train:
+    pre_event: "Data/train/pre-event"
+    post_event: "Data/train/post-event"
+    target: "Data/train/target"
+  val:
+    pre_event: "Data/val/pre-event"
+    post_event: "Data/val/post-event"
+    target: "Data/val/target"
+  test:
+    pre_event: "Data/test/pre-event"
+    post_event: "Data/test/post-event"
+    target: "Data/test/target"
+  index_path: "Data/index/patch_metadata.npz"
+  image_size: 1024
+  patch_size: 256
+  stride: 128
+
+dataset_thresholds:
+  valid_thr: 0.25
+  change_thr: 0.001
+  hard_neg_thr: 0.10
+  informative_thr: 0.084
+
+training:
+  epochs: 20
+  batch_size: 16
+  learning_rate: 0.001
+  optimizer: "adam"
+  loss: "bce_dice"
+  weight_decay: 0.0001
+  seed: 42
+
+augmentations:
+  color_jitter:
+    probability: 0.50
+    brightness: 0.15
+    contrast: 0.15
+    saturation: 0.10
+    hue: 0.02
+  horizontal_flip:
+    probability: 0.50
+  vertical_flip:
+    probability: 0.50
+  intensity_scale:
+    probability: 0.50
+  gaussian_blur:
+    probability: 0.20
+
+sampler:
+  ratios:
+    informative: 0.625
+    hard_negative: 0.25
+    trivial: 0.125
+
+metrics:
+  log_iou: true
+  log_images: true
+  image_log_every: 200
