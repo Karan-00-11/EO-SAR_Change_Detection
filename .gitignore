@@ -3,7 +3,6 @@ Data/
 venv/
 .github/*
 configs/
-model.ipynb
-
+loss.py
 
 __pycache__
