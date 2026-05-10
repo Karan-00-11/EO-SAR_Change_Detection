@@ -3,9 +3,4 @@ Data/
 venv/
 .github/*
 configs/
-loss.py
-utils/eval_metrics.py
-utils/logging.py
-train.ipynb
 __pycache__
-train.py
