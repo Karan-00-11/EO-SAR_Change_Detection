@@ -10,6 +10,12 @@ with open("config.yaml", "r") as f:
 
 aug = cfg["augmentations"]
 
+
+class RandomIntensityScale:
+    def __call__(self, x):
+        scale = torch.empty(1).uniform_(0.98, 1.02)
+        return x * scale
+
 class PairedTransform:
     def __init__(
             self,
@@ -32,7 +38,7 @@ class PairedTransform:
             ], p=aug["color_jitter"]["probability"])
         self.sar_augment = v2.RandomApply(
             [
-                v2.Lambda(lambda x: x *torch.empty(1).uniform_(0.98,1.02)),
+                RandomIntensityScale(),
             ], p=aug["intensity_scale"]["probability"])
         
         self.blur = v2.RandomApply(

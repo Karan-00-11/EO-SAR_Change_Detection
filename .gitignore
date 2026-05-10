@@ -4,3 +4,4 @@ venv/
 .github/*
 configs/
 __pycache__
+wandb/*
