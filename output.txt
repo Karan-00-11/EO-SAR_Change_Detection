@@ -1,0 +1,10 @@
+Best threshold by F1: 0.45 (F1=0.0332)
+Best threshold by IoU: 0.45 (IoU=0.0227)
+Top thresholds by F1:
+thr=0.50 f1=0.0389 iou=0.0220 p=0.0238 r=0.1122
+thr=0.45 f1=0.0387 iou=0.0227 p=0.0227 r=0.1359
+thr=0.05 f1=0.0387 iou=0.0227 p=0.0227 r=0.1360
+thr=0.10 f1=0.0387 iou=0.0227 p=0.0227 r=0.1360
+thr=0.15 f1=0.0387 iou=0.0227 p=0.0227 r=0.1360
+
+

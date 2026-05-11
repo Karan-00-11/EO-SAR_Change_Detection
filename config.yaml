@@ -29,8 +29,8 @@ dataset_thresholds:
 
 training:
   epochs: 10
-  batch_size: 8
-  learning_rate: 0.001
+  batch_size: 32
+  learning_rate: 0.0001
   optimizer: "adam"
   loss: "bce_dice"
   weight_decay: 0.0001
@@ -64,5 +64,5 @@ metrics:
   log_recall: true
   log_f1: true
   log_images: true
-  image_log_every: 5000
+  image_log_every: 3500
   log_steps: 500

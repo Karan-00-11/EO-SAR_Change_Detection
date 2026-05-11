@@ -15,7 +15,23 @@ def log_images(pre, post, pred_mask, gt_mask, step, max_images=2):
     for i in range(pre.shape[0]):
         # Make a 3‑channel visualization
         def to_3ch(x):
-            x = x[0] if x.shape[0] == 1 else x[:3]  # use first 3 channels if >1
+            # x: torch tensor either [C, H, W] or [H, W]
+            # ensure channel dim exists
+            if x.ndim == 2:
+                x = x.unsqueeze(0)
+
+            # If single-channel, replicate to 3 channels for visualization
+            if x.shape[0] == 1:
+                x = x.repeat(3, 1, 1)
+            else:
+                # If more than 3 channels, take first 3; if 2 channels, pad/replicate to 3
+                if x.shape[0] >= 3:
+                    x = x[:3]
+                else:
+                    # replicate channels until we have 3
+                    reps = (3 + x.shape[0] - 1) // x.shape[0]
+                    x = x.repeat(reps, 1, 1)[:3]
+
             x = (x - x.min()) / (x.max() - x.min() + 1e-8)
             x = (x * 255).byte().numpy()
             return np.transpose(x, (1, 2, 0))
