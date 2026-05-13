@@ -54,7 +54,7 @@ class DSC(nn.Module):
     
     def forward(self, x):
         return self.pw(self.dw(x))
-
+    
 class CAB(nn.Module):
     def __init__(self, ch,norm=nn.BatchNorm2d):
         super().__init__()
@@ -266,7 +266,11 @@ class CMCDNet(nn.Module):
         ])
 
         self.final_fuse = GatedFusion(side_dim)
-        self.head = nn.Conv2d(side_dim, num_classes, 1)
+        self.head = nn.Sequential(
+            nn.Conv2d(side_dim, side_dim, 3, padding=1),
+            nn.Conv2d(side_dim, side_dim, 3, padding=1),
+            nn.Conv2d(side_dim, num_classes, 1),
+        )
     
     def forward(self, x_opt, x_sar):
 

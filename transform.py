@@ -32,8 +32,6 @@ class PairedTransform:
                 v2.ColorJitter(
                     brightness=aug["color_jitter"]["brightness"],
                     contrast=aug["color_jitter"]["contrast"],
-                    saturation=aug["color_jitter"]["saturation"],
-                    hue=aug["color_jitter"]["hue"],
                 ),
             ], p=aug["color_jitter"]["probability"])
         self.sar_augment = v2.RandomApply(
@@ -47,13 +45,12 @@ class PairedTransform:
             ], p=aug["gaussian_blur"]["probability"])
 
     def __call__(self, image1, image2, mask):
-
-        image2 = self._sar_normalization(image2)
-        image1 = self._optical_normalization(image1)
-
         image1 = torch.from_numpy(image1).float().permute(2, 0, 1)
         image2 = torch.from_numpy(image2).float().permute(2, 0, 1)
         mask = torch.from_numpy(mask.squeeze()).long()
+
+        image1 = self._optical_percentile_scale(image1)
+        image2 = self._sar_percentile_scale(image2)
 
         image1 = self.optical_augment(image1)
         image2 = self.sar_augment(image2)
@@ -63,19 +60,37 @@ class PairedTransform:
 
         image1, image2, mask = self._paired_augment(image1, image2, mask)
 
+        image1 = self._optical_imagenet_normalization(image1)
+        image2 = self._sar_postprocess(image2)
+
 
         return {"image1": image1, "image2": image2, "mask": mask}
 
-    def _sar_normalization(self, image2):
-        p2, p98 = np.percentile(image2, (2, 98))
-        image2 = np.clip(image2, p2, p98)
-        image2 = (image2 - image2.min())/(image2.max() - image2.min() + 1e-6)
+    def _sar_percentile_scale(self, image2):
+        image2 = torch.log1p(image2)
+        flat = image2.flatten().float()
+        p2 = torch.quantile(flat, 0.02)
+        p98 = torch.quantile(flat, 0.98)
+        image2 = image2.clamp(p2, p98)
+        image2 = (image2 - image2.min()) / (image2.max() - image2.min() + 1e-6)
         return image2
-        
-    def _optical_normalization(self, image1):
-        p2, p98 = np.percentile(image1, (2, 98))
-        image1 = np.clip(image1, p2, p98)
-        image1 = (image1 - image1.min())/(image1.max() - image1.min() + 1e-6)
+
+    def _sar_postprocess(self, image2):
+        return image2.clamp(0.0, 1.0)
+
+    def _optical_percentile_scale(self, image1):
+        flat = image1.flatten().float()
+        p2 = torch.quantile(flat, 0.02)
+        p98 = torch.quantile(flat, 0.98)
+        image1 = image1.clamp(p2, p98)
+        image1 = (image1 - image1.min()) / (image1.max() - image1.min() + 1e-6)
+        return image1
+
+    def _optical_imagenet_normalization(self, image1):
+        if image1.shape[0] == 3:
+            mean = torch.tensor([0.485, 0.456, 0.406], dtype=image1.dtype, device=image1.device).view(3, 1, 1)
+            std = torch.tensor([0.229, 0.224, 0.225], dtype=image1.dtype, device=image1.device).view(3, 1, 1)
+            image1 = (image1 - mean) / std
         return image1
     
     def _paired_augment(self, image1, image2, mask):
@@ -96,23 +111,41 @@ class ValTransform:
     def __init__(self):
         pass
     def __call__(self, image1, image2, mask):
-        image2 = self._sar_normalization(image2)
-        image1 = self._optical_normalization(image1)
-
         image1 = torch.from_numpy(image1).float().permute(2, 0, 1)
         image2 = torch.from_numpy(image2).float().permute(2, 0, 1)
         mask = torch.from_numpy(mask.squeeze()).long()
 
+        image1 = self._optical_percentile_scale(image1)
+        image2 = self._sar_percentile_scale(image2)
+
+        image1 = self._optical_imagenet_normalization(image1)
+        image2 = self._sar_postprocess(image2)
+
         return {"image1": image1, "image2": image2, "mask": mask}
 
-    def _sar_normalization(self, image2):
-        p2, p98 = np.percentile(image2, (2, 98))
-        image2 = np.clip(image2, p2, p98)
-        image2 = (image2 - image2.min())/(image2.max() - image2.min() + 1e-6)
+    def _sar_percentile_scale(self, image2):
+        image2 = torch.log1p(image2)
+        flat = image2.flatten().float()
+        p2 = torch.quantile(flat, 0.02)
+        p98 = torch.quantile(flat, 0.98)
+        image2 = image2.clamp(p2, p98)
+        image2 = (image2 - image2.min()) / (image2.max() - image2.min() + 1e-6)
         return image2
-        
-    def _optical_normalization(self, image1):
-        p2, p98 = np.percentile(image1, (2, 98))
-        image1 = np.clip(image1, p2, p98)
-        image1 = (image1 - image1.min())/(image1.max() - image1.min() + 1e-6)
+
+    def _sar_postprocess(self, image2):
+        return image2.clamp(0.0, 1.0)
+
+    def _optical_percentile_scale(self, image1):
+        flat = image1.flatten().float()
+        p2 = torch.quantile(flat, 0.02)
+        p98 = torch.quantile(flat, 0.98)
+        image1 = image1.clamp(p2, p98)
+        image1 = (image1 - image1.min()) / (image1.max() - image1.min() + 1e-6)
+        return image1
+
+    def _optical_imagenet_normalization(self, image1):
+        if image1.shape[0] == 3:
+            mean = torch.tensor([0.485, 0.456, 0.406], dtype=image1.dtype, device=image1.device).view(3, 1, 1)
+            std = torch.tensor([0.229, 0.224, 0.225], dtype=image1.dtype, device=image1.device).view(3, 1, 1)
+            image1 = (image1 - mean) / std
         return image1

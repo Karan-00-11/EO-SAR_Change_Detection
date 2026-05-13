@@ -8,3 +8,13 @@ thr=0.10 f1=0.0387 iou=0.0227 p=0.0227 r=0.1360
 thr=0.15 f1=0.0387 iou=0.0227 p=0.0227 r=0.1360
 
 
+epoch 1/1 | train_loss 0.3251 | val_loss 0.2424 | val_iou 0.0524 | val_f1 0.6070 |
+
+
+
+epoch 10/10 | train_loss 0.1745 | val_loss 0.2352 | val_iou 0.0515 | val_f1 0.6094 | 
+
+
+
+val_loss: 0.2607
+precision: 0.4227 | recall: 0.7308 | f1: 0.5352 | iou: 0.3658

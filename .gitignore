@@ -6,3 +6,6 @@ configs/
 __pycache__
 env/*
 checkpoints/*
+wandb/*
+*.pth
+*.log

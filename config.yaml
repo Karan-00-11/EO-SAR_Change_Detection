@@ -19,7 +19,7 @@ data:
   index_path: "Data/index/patch_metadata.npz"
   image_size: 1024
   patch_size: 256
-  stride: 128
+  stride: 192
 
 dataset_thresholds:
   valid_thr: 0.25
@@ -29,18 +29,20 @@ dataset_thresholds:
 
 training:
   epochs: 10
-  batch_size: 32
+  batch_size: 56
   learning_rate: 0.0001
   optimizer: "adam"
-  loss: "bce_dice"
+  loss: "bce_focal"
   weight_decay: 0.0001
   seed: 42
+  threshold: 0.35
+
 
 augmentations:
   color_jitter:
-    probability: 0.50
-    brightness: 0.15
-    contrast: 0.15
+    probability: 0.20
+    brightness: 0.10
+    contrast: 0.10
     saturation: 0.10
     hue: 0.02
   horizontal_flip:
