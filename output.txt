@@ -57,3 +57,10 @@ scene_08_000110_building_damage.tif | precision: 0.8359 | recall: 0.3928 | f1: 0
 scene_08_000111_building_damage.tif | precision: 0.6648 | recall: 0.4992 | f1: 0.5697 | iou: 0.3988
 scene_08_000113_building_damage.tif | precision: 0.8910 | recall: 0.3527 | f1: 0.5050 | iou: 0.3381
 
+
+
+
+TP: 8395993 | FP: 6941954 | FN: 3798033 | TN: 528089620
+Row-normalized (GT):
+ [[0.98702515 0.01297485]
+ [0.3114667  0.6885333 ]]
