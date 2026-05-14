@@ -31,11 +31,12 @@ training:
   epochs: 10
   batch_size: 56
   learning_rate: 0.0001
-  optimizer: "adam"
+  optimizer: "adamw"
   loss: "bce_focal"
   weight_decay: 0.0001
   seed: 42
   threshold: 0.35
+  chk_path: checkpoint/
 
 
 augmentations:

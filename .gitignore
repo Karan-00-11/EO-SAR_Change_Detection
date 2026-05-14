@@ -1,5 +1,4 @@
 Data/*
-Data/
 venv/
 .github/*
 configs/
@@ -9,3 +8,7 @@ checkpoints/*
 wandb/*
 *.pth
 *.log
+
+# Data/**
+# !Data/index/
+# !Data/index/patch_metadata.npz

@@ -12,4 +12,4 @@ def remap_labels(mask: np.ndarray) -> np.ndarray:
 
     remapped = np.zeros_like(mask, dtype=np.uint8)
     remapped[(mask == 2) | (mask == 3)] = 1
-    return remapped
+    return remapped.astype(np.uint8)
