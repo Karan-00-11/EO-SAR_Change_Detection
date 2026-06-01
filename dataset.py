@@ -3,13 +3,15 @@ import numpy as np
 import os
 import typing
 import yaml
+from pathlib import Path
 
 from torch.utils.data import Dataset 
 from torchvision.transforms import v2
 from skimage.filters import sobel
 from utils.mask_utils import remap_labels
 
-with open("config.yaml", "r") as f:
+config_path = Path(__file__).resolve().parent / "config.yaml"
+with open(config_path, "r") as f:
     cfg = yaml.safe_load(f)
 
 threshold = cfg["dataset_thresholds"]

@@ -63,8 +63,8 @@ def main():
     timm_logger.setLevel(previous_timm_level)
 
     ckpt_path = args.weights
-    print("os.getcwd():", os.getcwd())
-    print("ckpt_path:", ckpt_path)
+    # print("os.getcwd():", os.getcwd())
+    # print("ckpt_path:", ckpt_path)
     checkpoint = torch.load(ckpt_path, map_location="cpu")
     state_dict = checkpoint.get("model_state_dict", checkpoint)
 
@@ -101,7 +101,8 @@ def main():
         persistent_workers=True,
     )
 
-    threshold = hyperparameter.get("threshold", 0.20)
+    # threshold = hyperparameter.get("threshold", 0.20)
+    threshold = 0.20
 
     model = model.to(device)
     model.eval()
@@ -115,6 +116,8 @@ def main():
         for pre, post, target, _ in eval_loader:
             pre = pre.to(device)
             post = post.to(device)
+            if target.max().item() > 1:
+                target = torch.from_numpy(remap_labels(target.cpu().numpy())).to(dtype=target.dtype)
             target = target.to(device)
 
             logits = model(pre, post)

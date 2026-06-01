@@ -2,11 +2,15 @@ import numpy as np
 import torch
 import random
 import yaml
+from pathlib import Path
 
 from torchvision.transforms import v2
 
-with open("config.yaml", "r") as f:
+config_path = Path(__file__).resolve().parent / "config.yaml"
+with open(config_path, "r") as f:
     cfg = yaml.safe_load(f)
+
+threshold = cfg["dataset_thresholds"]
 
 aug = cfg["augmentations"]
 
